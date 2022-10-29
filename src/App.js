@@ -1,24 +1,52 @@
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
+import Navbar from './components/Navbar';
+import { useContext } from 'react';
+import { ThemeContext } from './ThemeContext';
+import HomePage from './pages/HomePage';
+import PostPage from './pages/PostPage';
+import LoginPage from './pages/LoginPage';
+import ProfilePage from './pages/ProfilePage';
+import PrivateRoute from './components/PrivateRoute';
+import CreatePostPage from './pages/CreatePostPage';
 
 function App() {
+  const { theme } = useContext(ThemeContext);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className={`container ${theme}`}>
+        <Navbar />
+        <div className="main">
+          <Switch>
+            <PrivateRoute
+              path="/create"
+              component={CreatePostPage}
+            ></PrivateRoute>
+            <PrivateRoute
+              path="/profile"
+              component={ProfilePage}
+            ></PrivateRoute>
+            <Route path="/login">
+              <LoginPage />
+            </Route>
+            <Route path="/post/:postId">
+              <PostPage />
+            </Route>
+            <Route path="/search/:query?">
+              <HomePage />
+            </Route>
+            <Route path="/user/:userId">
+              <HomePage />
+            </Route>
+            <Route path="/">
+              <HomePage />
+            </Route>
+          </Switch>
+        </div>
+        <div className="footer">Attractive blog. All rights reserved</div>
+      </div>
+    </BrowserRouter>
   );
 }
 
